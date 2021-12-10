@@ -11,6 +11,17 @@ use Illuminate\Http\Request;
 class SudokuController extends Controller
 {
   public $_matrix;
+
+  public $sudoku=[
+    [7, 5, 1,  8, 4, 3,  9, 2, 6],
+    [8, 9, 3,  6, 2, 5,  1, 7, 4], 
+    [6, 4, 2,  1, 7, 9,  5, 8, 3],
+    [4, 2, 5,  3, 1, 6,  7, 9, 8],
+    [1, 7, 6,  9, 8, 2,  3, 4, 5],
+    [9, 3, 8,  7, 5, 4,  6, 1, 2],
+    [3, 6, 4,  2, 9, 7,  8, 5, 1],
+    [2, 8, 9,  5, 3, 1,  4, 6, 7],
+    [5, 1, 7,  4, 6, 8,  2, 3, 9]];
  
   public function __construct(array $matrix = null) {
     if (!isset($matrix)) {
@@ -20,6 +31,9 @@ class SudokuController extends Controller
     }
   }
  
+  /*
+    Sudoku generátor - visszatérési értéke egy kitöltetlen sudoku mátrix
+  */
   public function generate() {
     $this->_matrix = $this->_solve($this->_getEmptyMatrix());
     $cells = array_rand(range(0, 80), 30);
@@ -33,6 +47,26 @@ class SudokuController extends Controller
     }
     
     return response()->json($this->_matrix);
+  }
+
+  /*
+    Sudoku ellenőrző - helyes megoldás esetén true-val tér vissza, ellenben false
+  */
+  public function checker(Request $request) {
+    if (!$request) { return response()->json(false); }
+    if (empty($request->sudoku)) { return response()->json(false); }
+
+    $matrix = json_decode($request->sudoku);
+
+    for ($i = 0; $i < 9; $i++) { 
+      for ($j = 0; $j < 9; $j++) { 
+        if (count($this->_getPermissible($matrix, $i, $j)) > 0) {
+          return response()->json(false);
+        }
+      }
+    }
+    
+    return response()->json(true);
   }
  
   private function _getEmptyMatrix() {

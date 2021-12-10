@@ -20,4 +20,5 @@ Route::get('/', function () {
 
 Route::prefix('sudoku')->group(function () {
     Route::get('/generate', [SudokuController::class, 'generate']);
+    Route::post('/checker', [SudokuController::class, 'checker']);
 });
