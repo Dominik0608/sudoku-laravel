@@ -58,11 +58,11 @@ class SudokuController extends Controller
     if (empty($request->sudoku)) { return response()->json(false); }
     if (empty($request->username)) { return response()->json(false); }
 
-    $matrix = json_decode($request->sudoku);
+    $matrix = $request->sudoku;
 
     for ($i = 0; $i < 9; $i++) { 
       for ($j = 0; $j < 9; $j++) { 
-        if (count($this->_getPermissible($matrix, $i, $j)) > 0) {
+        if (count($this->_getPermissible($matrix[0], $i, $j)) > 0) {
           return response()->json(false);
         }
       }
