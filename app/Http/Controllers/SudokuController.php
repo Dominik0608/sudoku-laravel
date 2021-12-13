@@ -7,6 +7,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class SudokuController extends Controller
 {
@@ -55,6 +56,7 @@ class SudokuController extends Controller
   public function checker(Request $request) {
     if (!$request) { return response()->json(false); }
     if (empty($request->sudoku)) { return response()->json(false); }
+    if (empty($request->username)) { return response()->json(false); }
 
     $matrix = json_decode($request->sudoku);
 
@@ -64,6 +66,12 @@ class SudokuController extends Controller
           return response()->json(false);
         }
       }
+    }
+
+    if (count(User::where('name', $request->username)->get()) == 0) { 
+      $user = new User();
+      $user->name = $request->username;
+      $user->save();
     }
     
     return response()->json(true);

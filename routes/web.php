@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SudokuController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,4 +22,5 @@ Route::get('/', function () {
 Route::prefix('sudoku')->group(function () {
     Route::get('/generate', [SudokuController::class, 'generate']);
     Route::post('/checker', [SudokuController::class, 'checker']);
+    Route::get('/leaderboard', [UserController::class, 'leaderboard']);
 });
